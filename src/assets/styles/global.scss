@@ -1,0 +1,151 @@
+@import "./variables";
+
+body {
+  background-color: $white;
+  margin: 8px;
+  font-family: "OpenSans", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+a {
+  position: relative;
+  text-decoration: none;
+  color: $orange;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: $orange;
+    transform-origin: bottom left;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover::before {
+    transform-origin: bottom right;
+    transform: scaleX(1);
+  }
+}
+
+.container {
+  position: relative;
+  color: $light-black;
+  line-height: 1.4;
+  padding: 0 4rem 4rem;
+  border-radius: 3rem;
+  max-width: 900px;
+  margin: 2rem auto 4rem;
+  font-size: calc(2px + 2vmin);
+
+  & img {
+    border-radius: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    max-width: 200px;
+    position: relative;
+    top: -110px;
+    margin-bottom: -110px;
+    border: 10px solid $orange;
+  }
+
+  & h1 {
+    padding-bottom: 0;
+    padding-top: 0;
+    margin-top: 30px;
+    margin-bottom: 0;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 42px;
+    color: $orange;
+  }
+
+  & h2 {
+    padding-bottom: 0.5rem;
+    padding-top: 0;
+    margin-top: 0;
+    font-weight: 100;
+    text-align: center;
+    font-size: 34px;
+    color: $light-black;
+  }
+
+  & h3 {
+    color: $orange;
+    font-size: 32px;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &:after {
+      content: " ";
+      width: 50px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      height: 1px;
+      background: $light-black;
+      display: block;
+    }
+  }
+
+  & h4 {
+    color: $light-black;
+    font-weight: 600;
+    margin: 20px 10px 0;
+    font-size: 20px;
+  }
+
+  & h5 {
+    color: $light-black;
+    font-weight: 300;
+    font-style: italic;
+    margin: 10px;
+    font-size: 14px;
+  }
+
+  & ul {
+    font-weight: 200;
+    list-style-type: none;
+    padding-left: 0;
+
+    & li {
+      position: relative;
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+.tooltip {
+  color: $light-black;
+  background-color: $orange;
+}
+
+@media only screen and (max-width: 768px) {
+  .content {
+    padding: 0 2rem 2rem;
+
+    & h1 {
+      font-size: 30px;
+    }
+    & h2 {
+      font-size: 25px;
+    }
+    & h3 {
+      font-size: 22px;
+    }
+    & img {
+      max-width: 150px;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@import "../../assets/styles/global.scss";
+@import "../../assets/styles/variables";
+
+nav {
+    & a {
+        margin: 1rem;
+    }
+}
