@@ -6,9 +6,8 @@ import "./messageform.scss";
 const MessageForm = ({ addMessage }) => {
   const [text, setText] = useState("");
   const [author, setAuthor] = useState("");
-  const [date, setDate] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!text.trim() || !author.trim()) {
       alert("Veuillez saisir un message et un auteur");
@@ -20,9 +19,24 @@ const MessageForm = ({ addMessage }) => {
       author,
       date: format(new Date(), "dd/MM/yyyy HH:mm:ss"),
     };
-    addMessage(newMessage);
-    setText("");
-    setAuthor("");
+    try {
+      const response = await fetch("/api/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newMessage),
+      });
+      if (response.ok) {
+        addMessage(newMessage);
+        setText("");
+        setAuthor("");
+      } else {
+        console.error("Erreur lors de l'envoi du message");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du message:", error);
+    }
   };
 
   return (

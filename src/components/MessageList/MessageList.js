@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./messagelist.scss";
 
-const MessageList = ({ messages }) => {
+const MessageList = () => {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch("/api/messages");
+        if (response.ok) {
+          const data = await response.json();
+          setMessages(data);
+        } else {
+          console.error("Erreur lors de la récupération des messages");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des messages:", error);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
   return (
     <div className="message-list">
       <h3>Liste des Messages</h3>
