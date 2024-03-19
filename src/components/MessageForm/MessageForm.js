@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import "./messageform.scss";
 
@@ -14,7 +13,6 @@ const MessageForm = ({ addMessage }) => {
       return;
     }
     const newMessage = {
-      id: uuidv4(),
       text,
       author,
       date: format(new Date(), "dd/MM/yyyy HH:mm:ss"),
@@ -31,6 +29,8 @@ const MessageForm = ({ addMessage }) => {
         addMessage(newMessage);
         setText("");
         setAuthor("");
+        // Afficher une alerte après l'envoi réussi
+        alert("Message envoyé avec succès !");
       } else {
         console.error("Erreur lors de l'envoi du message");
       }
