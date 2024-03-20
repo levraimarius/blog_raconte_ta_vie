@@ -29,7 +29,6 @@ const MessageForm = ({ addMessage }) => {
         addMessage(newMessage);
         setText("");
         setAuthor("");
-        // Afficher une alerte après l'envoi réussi
         alert("Message envoyé avec succès !");
       } else {
         console.error("Erreur lors de l'envoi du message");

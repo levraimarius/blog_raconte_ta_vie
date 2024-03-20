@@ -1,76 +1,55 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import MessageListItem from "../MessageListItem/MessageListItem";
 import "./messagelist.scss";
 
 const MessageList = () => {
   const [messages, setMessages] = useState([]);
-  const [editingMessageId, setEditingMessageId] = useState(null);
-  const [editedText, setEditedText] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch("/api/messages");
-        if (response.ok) {
-          const data = await response.json();
-          setMessages(data);
-        } else {
-          console.error("Erreur lors de la récupération des messages");
-        }
+        const response = await axios.get("/api/messages");
+        setMessages(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des messages:", error);
       }
     };
 
     fetchMessages();
+
+    const checkAdminStatus = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const response = await axios.get("/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setIsAdmin(response.data.role === "admin");
+      } catch (error) {
+        console.error("Erreur lors de la vérification du statut admin:", error);
+      }
+    };
+
+    checkAdminStatus();
   }, []);
 
-  const handleEdit = (messageId, initialText) => {
-    setEditingMessageId(messageId);
-    setEditedText(initialText);
+  const handleUpdate = (messageId, newText) => {
+    const updatedMessages = messages.map((message) =>
+      message._id === messageId ? { ...message, text: newText } : message
+    );
+    setMessages(updatedMessages);
   };
 
-  const handleCancelEdit = () => {
-    setEditingMessageId(null);
-    setEditedText("");
-  };
-
-  const handleSaveEdit = async (messageId) => {
-    try {
-      const response = await fetch(`/api/messages/${messageId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: editedText }),
-      });
-      if (response.ok) {
-        const updatedMessages = messages.map((message) =>
-          message._id === messageId ? { ...message, text: editedText } : message
-        );
-        setMessages(updatedMessages);
-        setEditingMessageId(null);
-        setEditedText("");
-      } else {
-        console.error("Erreur lors de la modification du message");
-      }
-    } catch (error) {
-      console.error("Erreur lors de la modification du message:", error);
-    }
-  };
-
-  const handleDelete = async (messageId) => {
-    try {
-      const response = await fetch(`/api/messages/${messageId}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setMessages(messages.filter((message) => message._id !== messageId));
-      } else {
-        console.error("Erreur lors de la suppression du message");
-      }
-    } catch (error) {
-      console.error("Erreur lors de la suppression du message:", error);
-    }
+  const handleDelete = (messageId) => {
+    const updatedMessages = messages.filter(
+      (message) => message._id !== messageId
+    );
+    setMessages(updatedMessages);
   };
 
   return (
@@ -81,36 +60,13 @@ const MessageList = () => {
       ) : (
         <ul>
           {messages.map((message) => (
-            <li key={message._id}>
-              {editingMessageId === message._id ? (
-                <div>
-                  <input
-                    type="text"
-                    value={editedText}
-                    onChange={(e) => setEditedText(e.target.value)}
-                  />
-                  <button onClick={() => handleSaveEdit(message._id)}>
-                    Enregistrer
-                  </button>
-                  <button onClick={handleCancelEdit}>Annuler</button>
-                </div>
-              ) : (
-                <div className="message">{message.text}</div>
-              )}
-              <div className="message-footer">
-                <div>
-                  <button onClick={() => handleEdit(message._id, message.text)}>
-                    Modifier
-                  </button>
-                  <button onClick={() => handleDelete(message._id)}>
-                    Supprimer
-                  </button>
-                </div>
-                <span className="author">
-                  {message.author} | {message.date}
-                </span>
-              </div>
-            </li>
+            <MessageListItem
+              key={message._id}
+              message={message}
+              onUpdate={handleUpdate}
+              onDelete={handleDelete}
+              isAdmin={isAdmin}
+            />
           ))}
         </ul>
       )}
