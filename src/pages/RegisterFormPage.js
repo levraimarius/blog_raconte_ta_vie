@@ -1,5 +1,5 @@
 import React from "react";
-import RegisterForm from "../components/RegisterForm/RegisterForm";
+import RegisterForm from "../components/Login/Login";
 
 const RegisterFormPage = () => {
   const handleRegister = (formData) => {
@@ -8,7 +8,7 @@ const RegisterFormPage = () => {
 
   return (
     <div>
-      <h2>Register</h2>
+      <h3>Inscription</h3>
       <RegisterForm handleRegister={handleRegister} />
     </div>
   );
